@@ -1,46 +1,28 @@
-const { Command } = require("commander");
-const program = new Command();
-require("colors");
+const yargs = require("yargs");
+const { hideBin } = require("yargs/helpers");
 
-
-const {
-  listContacts,
-  getContactById,
-  addContact,
-  removeContact,
-} = require("./contacts");
-
-program
-  .option("-a, --action <type>", "choose action")
-  .option("-i, --id <type>", "user id")
-  .option("-n, --name <type>", "user name")
-  .option("-e, --email <type>", "user email")
-  .option("-p, --phone <type>", "user phone");
-
-program.parse(process.argv);
-
-const argv = program.opts();
+const { listContacts, getContactById, addContact, removeContact } = require("./contacts");
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case "list":
       const allContacts = await listContacts();
-      return console.log(allContacts);
+      console.table(allContacts);
       break;
 
     case "get":
-      const contact = await getContactById(id);
-      return console.log(contact);
+      const oneContact = await getContactById(id);
+      console.log(oneContact);
       break;
 
     case "add":
-      const addContact = await addContact(name, email, phone);
-      return console.log(addContact);
+      const newContact = await addContact(name, email, phone);
+      console.log(newContact);
       break;
 
     case "remove":
-      const removeContact = await removeContact(id);
-      return console.log(removeContact);
+      const deletedContact = await removeContact(id);
+      console.log(deletedContact);
       break;
 
     default:
@@ -48,6 +30,7 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
   }
 };
 
+const arr = hideBin(process.argv);
+const { argv } = yargs(arr);
 invokeAction(argv);
-
 
