@@ -1,36 +1,38 @@
-const fs = require("fs").promises;
-const path = require("path");
+const { Command } = require('commander');
+const program = new Command();
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone');
 
-const pathFile = path.join("db", "contacts.json");
+program.parse(process.argv);
+
+const argv = program.opts();
 
 
+function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case 'list':
+      // ...
+      break;
 
+    case 'get':
+      // ... id
+      break;
 
-/*
- * Розкоментуй і запиши значення
- * const contactsPath = ;
- */
+    case 'add':
+      // ... name email phone
+      break;
 
-// TODO: задокументувати кожну функцію
-const listContacts = async () => {
-    try {
-        const pathResult = await fs.readFile(pathFile);
-        const fileResult = JSON.parse(pathResult);
-      } catch (err) {
-        console.log(err);
-      }
-    // ...твій код. Повертає масив контактів.
+    case 'remove':
+      // ... id
+      break;
+
+    default:
+      console.warn('\x1B[31m Unknown action type!');
   }
-  
-  function getContactById(contactId) {
-    // ...твій код. Повертає об'єкт контакту з таким id. Повертає null, якщо контакт з таким id не знайдений.
-  }
-  
-  function removeContact(contactId) {
-    // ...твій код. Повертає об'єкт видаленого контакту. Повертає null, якщо контакт з таким id не знайдений.
-  }
-  
-  function addContact(name, email, phone) {
-    // ...твій код. Повертає об'єкт доданого контакту. 
-  }
+}
 
+invokeAction(argv);
